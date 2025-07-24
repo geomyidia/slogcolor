@@ -66,7 +66,7 @@ func (h *Handler) Handle(_ context.Context, r slog.Record) error {
 	bf := getBuffer()
 	bf.Reset()
 
-	if !r.Time.IsZero() {
+	if !h.opts.NoTime && !r.Time.IsZero() {
 		fmt.Fprint(bf, color.New(color.Faint).Sprint(r.Time.Format(h.opts.TimeFormat)))
 		fmt.Fprint(bf, " ")
 	}

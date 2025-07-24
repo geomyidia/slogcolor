@@ -25,6 +25,10 @@ func Example() {
 	slog.Warn("Slow request!", "method", "GET", "path", "/api/users", "duration", 750*time.Millisecond)
 	slog.Error("DB connection lost!", "err", errors.New("connection reset"), "db", "horalky")
 	// Output:
+
+	opts.NoTime = true
+	slog.SetDefault(slog.New(slogcolor.NewHandler(os.Stderr, opts)))
+	slog.Info("Message without time")
 }
 
 func BenchmarkLog(b *testing.B) {

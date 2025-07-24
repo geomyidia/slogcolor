@@ -25,6 +25,7 @@ var DefaultOptions *Options = &Options{
 	MsgLength:     0,
 	MsgColor:      color.New(),
 	NoColor:       false,
+	NoTime:        false,
 	LevelTags:     DefaultLevelTags,
 }
 
@@ -55,6 +56,9 @@ type Options struct {
 
 	// NoColor disables color, default: false.
 	NoColor bool
+
+	// NoTime disables time, default: false.
+	NoTime bool
 
 	// LevelTags is level tag for message, default: DefaultLevelStyles
 	LevelTags map[slog.Level]string
