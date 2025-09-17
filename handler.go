@@ -6,6 +6,7 @@ import (
 	"io"
 	"log/slog"
 	"maps"
+	"os"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -85,6 +86,8 @@ func (h *Handler) Handle(_ context.Context, r slog.Record) error {
 				break
 			case ShortFile:
 				filename = filepath.Base(f.File)
+			case MediumFile:
+				filename = h.getRelativePath(f.File)
 			case LongFile:
 				filename = f.File
 			}
@@ -98,7 +101,10 @@ func (h *Handler) Handle(_ context.Context, r slog.Record) error {
 				lenStr := strconv.Itoa(h.opts.SrcFileLength)
 				formatted = fmt.Sprintf("%-"+lenStr+"s", filename+lineStr)
 			}
-			fmt.Fprint(bf, formatted)
+			if h.opts.SrcFileColor == nil {
+				h.opts.SrcFileColor = color.New() // set to empty otherwise we have a null pointer
+			}
+			fmt.Fprint(bf, h.opts.SrcFileColor.Sprint(formatted))
 		}
 	}
 
@@ -169,4 +175,16 @@ func (h *Handler) WithAttrs(attrs []slog.Attr) slog.Handler {
 	h2 := h.clone()
 	h2.attrs = append(h2.attrs, attrs...)
 	return h2
+}
+
+// getRelativePath returns the file path relative to the project root
+func (h *Handler) getRelativePath(fullPath string) string {
+	// Try to get the working directory (project root)
+	if wd, err := os.Getwd(); err == nil {
+		if relPath, err := filepath.Rel(wd, fullPath); err == nil {
+			return relPath
+		}
+	}
+	// Fallback to full path if we can't determine relative path
+	return fullPath
 }

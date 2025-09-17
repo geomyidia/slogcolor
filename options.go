@@ -19,8 +19,9 @@ var DefaultLevelTags = map[slog.Level]string{
 var DefaultOptions *Options = &Options{
 	Level:         slog.LevelInfo,
 	TimeFormat:    time.DateTime,
-	SrcFileMode:   ShortFile,
+	SrcFileMode:   MediumFile,
 	SrcFileLength: 0,
+	SrcFileColor:  color.New(),
 	MsgPrefix:     color.HiWhiteString("| "),
 	MsgLength:     0,
 	MsgColor:      color.New(),
@@ -44,6 +45,9 @@ type Options struct {
 
 	// SrcFileLength to show fixed length filename to line up the log output, default 0 shows complete filename.
 	SrcFileLength int
+
+	// SrcFileColor is the color of the source file info, default to empty (no color).
+	SrcFileColor *color.Color
 
 	// MsgPrefix to show prefix before message, default: white colored "| ".
 	MsgPrefix string
